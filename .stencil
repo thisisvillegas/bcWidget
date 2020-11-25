@@ -1,0 +1,11 @@
+{
+  "customLayouts": {
+    "brand": {},
+    "category": {},
+    "page": {},
+    "product": {}
+  },
+  "normalStoreUrl": "https://rcdc.mybigcommerce.com/?ctk=3d3d494e-5ef0-41a3-8c9b-5717675fcba4",
+  "accessToken": "pav524lyrxitp2c4kzwodjasptjovr2",
+  "port": 3000
+}

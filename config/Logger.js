@@ -26,7 +26,7 @@ log4js.configure({
     categories: {
         default: {
             appenders: ['everything', 'just-errors', 'console'],
-            level: 'debug',
+            level: 'info',
             enableCallStack: true
         },
     },

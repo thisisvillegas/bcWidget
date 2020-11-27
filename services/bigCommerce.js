@@ -8,17 +8,20 @@ class BigCommerce extends BaseService {
 
 	async getAllProducts() {
 		const response = await this.request({
-			uri: `${process.env.API_PATH}/catalog/products`,
+			uri: `${process.env.API_PATH}catalog/products`,
 			method: 'GET',
-			headers: {
-				"X-Auth-Token": "5koshygkmuxtzunx3nxdiaatzr5fmu6",
-				"content-type": "application/json",
-				"Accept": "application/json"
-			},
 			description: `get all products`,
-			expectedStatus,
 		});
-		return response;
+		return JSON.parse(response.body);
+	}
+
+	async getImageUrlByItem(itemID) {
+		const response = await this.request({
+			uri: `${process.env.API_PATH}catalog/products/${itemID}/images`,
+			method: 'GET',
+			description: `get images by item id`,
+		})
+		return JSON.parse(response.body);
 	}
 
 	// async getConcepts({

@@ -15,7 +15,6 @@ class BaseService {
 		method,
 		data,
 		description,
-		expectedStatus
 	}) {
 		Logger.info(`${description}...`);
 		Logger.debug('Request Info:');
@@ -24,15 +23,15 @@ class BaseService {
 			method,
 			data,
 			description,
-			expectedStatus
 		}, null, '\t'));
 		return new Promise((resolve, reject) => {
 			request({
 					method,
 					uri,
 					headers: {
-						'Content-type': 'application/json',
-						Cookie: `ID_TOKEN=${this.impersonateToken}`,
+						"X-Auth-Token": "5koshygkmuxtzunx3nxdiaatzr5fmu6",
+						"content-type": "application/json",
+						"Accept": "application/json"
 					},
 					rejectUnauthorized: false,
 					body: JSON.stringify(data),
@@ -46,13 +45,13 @@ class BaseService {
 						reject(body);
 					} else {
 						Logger.debug(`${description} response (code: ${response.statusCode}): `);
-						if (expectedStatus) {
-							try {
-								expect(response.statusCode).is.equal(expectedStatus);
-							} catch (e) {
-								reject(new Error(e.message));
-							}
-						}
+						// if (expectedStatus) {
+						// 	try {
+						// 		expect(response.statusCode).is.equal(expectedStatus);
+						// 	} catch (e) {
+						// 		reject(new Error(e.message));
+						// 	}
+						// }
 						try {
 							Logger.debug(JSON.stringify(JSON.parse(body), null, '\t'));
 							resolve(response);

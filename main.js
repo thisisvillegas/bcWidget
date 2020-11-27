@@ -8,23 +8,17 @@ const {
     createWidgetTemplate
 } = require('./core/createWidgetTemplate')
 
+// const BigCommerce = require('./services/bigCommerce')
+
 require('dotenv').config()
 
 
 async function main() {
 
-    // await getData().then(async () => {
-    //     await createWidgetTemplate()
-    // })
+    let response = await getData()
+    console.log('response', response);
 
-    await getData().then(async itemURLData => {
-        Logger.info(`following data was mined ${itemURLData.length}`)
-        await createWidgetTemplate(itemURLData)
-    })
 
-    // var itemURLData = await getData()
-    // Logger.info(`following data was mined ${itemURLData.length}`)
-    // await createWidgetTemplate(itemURLData)
 
 
 }

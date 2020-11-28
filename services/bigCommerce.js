@@ -24,26 +24,44 @@ class BigCommerce extends BaseService {
 		return JSON.parse(response.body);
 	}
 
-	// async getConcepts({
-	// 	namespace
-	// }) {
-	// 	const description = 'get concepts';
-	// 	const response = await this.request({
-	// 		uri: `${this.apiURL}/${namespace}/controllers/vertx/hotschedules/getConcepts`,
-	// 		method: 'GET',
-	// 		description,
-	// 	});
-	// 	return response;
-	// }
+	async getAllTemplates() {
+		const response = await this.request({
+			uri: `${process.env.API_PATH}content/widget-templates`,
+			method: 'GET',
+			description: `get all templates`,
+		})
+		return JSON.parse(response.body);
+	}
 
-	// async getGroups(namespace, concept) {
-	// 	const response = await this.request({
-	// 		uri: `${this.apiURL}/${namespace}/controllers/vertx/hotschedules/${concept}/getGroups`,
-	// 		method: 'GET',
-	// 		description: `get groups with conceptID ${concept}`,
-	// 	});
-	// 	return response;
-	// }
+	async createNewTemplate(data) {
+		const response = await this.request({
+			uri: `${process.env.API_PATH}content/widget-templates`,
+			method: 'POST',
+			description: `create new templates`,
+			data: data
+		})
+		return JSON.parse(response.body);
+	}
+
+	async getAllWidget() {
+		const response = await this.request({
+			uri: `${process.env.API_PATH}content/widgets`,
+			method: 'GET',
+			description: `get all widgets`,
+		})
+		return JSON.parse(response.body);
+	}
+
+	async createNewWidget(data) {
+		const response = await this.request({
+			uri: `${process.env.API_PATH}content/widgets`,
+			method: 'POST',
+			description: `create new widget`,
+			data: data
+		})
+		return JSON.parse(response.body);
+	}
+
 }
 
 module.exports = BigCommerce;

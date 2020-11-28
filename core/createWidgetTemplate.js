@@ -1,62 +1,78 @@
-const axios = require('axios')
 const {
     Logger
 } = require('../config/Logger')
+const util = require('util')
 
+const BigCommerce = require('../services/bigCommerce')
+let bigCommerce = new BigCommerce()
 
-async function createWidgetTemplate(itemURLData) {
-
-    Logger.info('initiating widget template')
-    Logger.info(itemURLData)
-
-    let data = {
-        headers: {
-            "X-Auth-Token": "5koshygkmuxtzunx3nxdiaatzr5fmu6",
-            "content-type": "application/json",
-            "Accept": "application/json"
-        }
-
-    }
-    let uuid = ''
+async function createWidgetTemplate() {
     try {
-        return new Promise(function (resolve, reject) {
-            Logger.info('checking to see if template exists')
-            axios.get(`${process.env.API_PATH}content/widget-templates`, data).then(res => {
-                let widgetTemplateArray = res.data.data
-                let templateCount = 0
-                let creationFlag = true
-                widgetTemplateArray.forEach(template => {
-                    templateCount += 1
-                    if (template.name === 'Header Images') {
-                        Logger.info(`template found ${template.uuid}, skipping creation step`)
-                        uuid = template.uuid
-                        creationFlag = false
-                        resolve(uuid)
-                    } else {
-                        let widgetTemplateArrayTotal = widgetTemplateArray.length
-                        if (templateCount === widgetTemplateArrayTotal && creationFlag === true) {
-                            Logger.info(`no template found, initializing new widget template`)
-                            let newData = {
-                                data: {
-                                    "name": "Header Images2",
-                                    "template": "{{#each images}}<a href='{{image_url}}'><img src={{image_source}} style='width:33.3%'/></a>{{/each}}"
-                                }
-                            }
-                            let newTarget = Object.assign(data, newData)
-                            console.log('newTarget', newTarget);
+        Logger.info('checking to see if template exists')
+        let templateCount = 0
+        let creationFlag = true
+        let uuid = ''
+        let newUuid = ''
+        let widgetTemplateArrayResponse = await bigCommerce.getAllTemplates()
+        Logger.info(`found ${widgetTemplateArrayResponse.data.length} widget templates`)
+        for (let i = 0; i < widgetTemplateArrayResponse.data.length; i++) {
+            let template = widgetTemplateArrayResponse.data[i]
+            templateCount += 1
+            if (template.name === `${process.env.TEMPLATE_NAME}`) {
+                Logger.info(`template found ${template.uuid}, skipping creation step`)
+                uuid = template.uuid
+                creationFlag = false
+            } else {
+                let widgetTemplateArrayTotal = widgetTemplateArrayResponse.data.length
+                if (templateCount === widgetTemplateArrayTotal && creationFlag === true) {
+                    Logger.info(`no template found, initializing new widget template`)
 
-
-                            //This still needs to be flushed out but would be a nice to have
-                            Logger.info('sending out POST to create widget template')
-                            // axios.post(`${process.env.API_PATH}content/widget-templates`, newTarget).then(res => {
-                            //     console.log('res', res);
-                            // })
-                        }
+                    let data = {
+                        "name": `${process.env.TEMPLATE_NAME}`,
+                        "schema": [{
+                            "type": "array",
+                            "label": "Images",
+                            "id": "images",
+                            "defaultCount": 3,
+                            "entryLabel": "Image",
+                            "thumbnail": "imageUrl.src",
+                            "schema": [{
+                                "type": "tab",
+                                "label": "Content",
+                                "sections": [{
+                                    "settings": [{
+                                            "type": "imageManager",
+                                            "id": "imageUrl",
+                                            "default": {
+                                                "src": "https://cdn11.bigcommerce.com/s-24o5040vgk/products/77/images/265/foglinenbeigestripetowel3b.1605595073.386.513.jpg?c=1",
+                                                "type": "IMAGE_MANAGER"
+                                            }
+                                        },
+                                        {
+                                            "label": "Link",
+                                            "type": "input",
+                                            "id": "link",
+                                            "default": "#"
+                                        }
+                                    ]
+                                }]
+                            }]
+                        }],
+                        "template": "{{#each images}}<a href='{{link}}'><img src={{imageUrl.src}} style='width:33.3%'/></a>{{/each}}"
                     }
-                });
 
-            })
-        })
+                    let response = await bigCommerce.createNewTemplate(data)
+                    console.log('response', util.inspect(response, false, null, true));
+                    newUuid = response.data.uuid
+
+                }
+            }
+        }
+        if (creationFlag === false) {
+            return uuid
+        } else {
+            return newUuid
+        }
     } catch (error) {
         console.log('error', error);
     }

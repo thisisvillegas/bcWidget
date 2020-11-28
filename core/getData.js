@@ -1,4 +1,4 @@
-const axios = require('axios')
+// const axios = require('axios')
 const {
     Logger
 } = require('../config/Logger')
@@ -8,13 +8,13 @@ let bigCommerce = new BigCommerce()
 
 async function getData() {
 
-    Logger.info('starting to gather data')
+    Logger.info('starting to gather product data')
     let itemIDArray = []
     let imageURL = []
 
     try {
 
-        Logger.info('looking up items')
+        Logger.info('looking up products')
         let itemIDArrayResponse = await bigCommerce.getAllProducts()
 
         for (let i = 0; i < itemIDArrayResponse.data.length; i++) {
@@ -23,7 +23,7 @@ async function getData() {
                 "name": itemIDArrayResponse.data[i].name,
             })
         }
-        Logger.info(`found ${itemIDArray.length} items`)
+        Logger.info(`found ${itemIDArray.length} products`)
         Logger.info('using product ids to find image URLs')
 
         for (let i = 0; i < itemIDArray.length; i++) {
@@ -38,7 +38,7 @@ async function getData() {
             }
         }
 
-        Logger.info(`found ${imageURL.length} URLs`)
+        Logger.info(`compiled ${imageURL.length} item URLs from ${itemIDArray.length} products`)
         // console.log('imageURL', imageURL);
         return imageURL
 

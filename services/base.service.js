@@ -45,13 +45,6 @@ class BaseService {
 						reject(body);
 					} else {
 						Logger.debug(`${description} response (code: ${response.statusCode}): `);
-						// if (expectedStatus) {
-						// 	try {
-						// 		expect(response.statusCode).is.equal(expectedStatus);
-						// 	} catch (e) {
-						// 		reject(new Error(e.message));
-						// 	}
-						// }
 						try {
 							Logger.debug(JSON.stringify(JSON.parse(body), null, '\t'));
 							resolve(response);

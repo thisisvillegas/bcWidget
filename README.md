@@ -4,7 +4,7 @@ This app will make an API call to gather all your products and will gather IDS. 
 
 The process will create a new widget that is available in the Page Builder to click and drop into your site.
 
-##Installation
+## Installation
 
 1. Clone/fork your repo into your local machine.
 2. Once its downloaded run

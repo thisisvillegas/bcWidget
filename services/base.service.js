@@ -29,7 +29,7 @@ class BaseService {
 					method,
 					uri,
 					headers: {
-						"X-Auth-Token": "5koshygkmuxtzunx3nxdiaatzr5fmu6",
+						"X-Auth-Token": `${process.env.ACCESS_TOKEN}`,
 						"content-type": "application/json",
 						"Accept": "application/json"
 					},
